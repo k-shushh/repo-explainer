@@ -297,7 +297,7 @@ if not st.session_state.repo_loaded:
     )
 else:
     for msg in st.session_state.messages:
-        avatar = "🧑‍💻" if msg["role"] == "user" else "◆"
+        avatar = "🧑‍💻" if msg["role"] == "user" else "💡"
         symbol_class = "user" if msg["role"] == "user" else "assistant"
         symbol = "$" if msg["role"] == "user" else ">"
         with st.chat_message(msg["role"], avatar=avatar):
@@ -318,7 +318,7 @@ else:
         with st.chat_message("user", avatar="🧑‍💻"):
             st.markdown(f'<span class="prompt-symbol user">$</span>{question}', unsafe_allow_html=True)
 
-        with st.chat_message("assistant", avatar="◆"):
+        with st.chat_message("assistant", avatar="💡"):
             with st.spinner("searching repository..."):
                 try:
                     retriever = st.session_state.vectorstore.as_retriever()
