@@ -1,0 +1,6 @@
+ragenv/
+__pycache__/
+.env
+sample_repo/
+*.pyc
+document.txt
