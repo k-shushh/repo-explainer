@@ -297,7 +297,7 @@ if not st.session_state.repo_loaded:
     )
 else:
     for msg in st.session_state.messages:
-        avatar = "🧑‍💻" if msg["role"] == "user" else "◆"
+        avatar = "🧑‍💻" if msg["role"] == "user" else "💡"
         symbol_class = "user" if msg["role"] == "user" else "assistant"
         symbol = "$" if msg["role"] == "user" else ">"
         with st.chat_message(msg["role"], avatar=avatar):
@@ -318,7 +318,7 @@ else:
         with st.chat_message("user", avatar="🧑‍💻"):
             st.markdown(f'<span class="prompt-symbol user">$</span>{question}', unsafe_allow_html=True)
 
-        with st.chat_message("assistant", avatar="◆"):
+        with st.chat_message("assistant", avatar="💡"):
             with st.spinner("searching repository..."):
                 try:
                     retriever = st.session_state.vectorstore.as_retriever()
@@ -330,7 +330,12 @@ else:
                     else:
                         context = "\n\n".join(doc.page_content for doc in docs)
                         prompt = f"""You are a helpful code assistant. Answer the question using ONLY the provided code context.
-Be concise, clear, and highlight relevant code snippets when possible.
+
+Rules:
+- Explain in plain English, in prose or bullet points.
+- Do NOT output JSON, YAML, or mimic any return format/schema you see inside the code context — that's what the CODE does, not how you should answer.
+- Only include a code snippet if it directly helps illustrate the answer, and keep it short.
+- If the context doesn't contain enough information to answer, say so plainly instead of guessing.
 
 Context:
 {context}

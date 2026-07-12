@@ -1,4 +1,5 @@
 from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 import ast
 import os
 
@@ -36,7 +37,7 @@ def parse_python_file(file_path):
     file_doc = Document(
         page_content=code,
         metadata={
-            "name": file_path.split("\\")[-1],
+            "name": os.path.basename(file_path),
             "type": "File",
             "file": file_path
         }
@@ -62,5 +63,39 @@ def parse_python_file(file_path):
 
             documents.append(doc)
 
+
+    return documents
+
+
+# Fallback for non-Python source files (JS, TS, Java, Go, etc.) and
+# plain text/config/docs — no AST available, so just chunk the raw text.
+_generic_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=150
+)
+
+def parse_generic_file(file_path):
+
+    with open(file_path, encoding="utf-8", errors="ignore") as file:
+        code = file.read()
+
+    if not code.strip():
+        return []
+
+    chunks = _generic_splitter.split_text(code)
+
+    documents = []
+
+    for i, chunk in enumerate(chunks):
+        documents.append(
+            Document(
+                page_content=chunk,
+                metadata={
+                    "name": f"{os.path.basename(file_path)}#chunk{i}",
+                    "type": "File",
+                    "file": file_path
+                }
+            )
+        )
 
     return documents
