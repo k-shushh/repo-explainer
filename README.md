@@ -9,7 +9,7 @@ RAG-powered Q&A over any public GitHub repository. Paste a repo URL, and ask que
 1. **Clone** — the target repo is cloned locally (`github_loader.py`)
 2. **Load & chunk** — source files are parsed and split into chunks (`code_loader.py`, `code_parser.py`)
 3. **Embed & index** — chunks are embedded (HuggingFace embeddings) and stored in a Chroma vectorstore (`rag_pipeline.py`)
-4. **Retrieve & answer** — on each question, the top relevant chunks are retrieved and passed as context to LLaMA 3.1 (via Groq) to generate a grounded answer
+4. **Retrieve & answer** — on each question, the top relevant chunks are retrieved and passed as context to a Groq chat model to generate a grounded answer
 
 ```
 GitHub URL → clone → chunk → embed → Chroma vectorstore
@@ -21,7 +21,7 @@ GitHub URL → clone → chunk → embed → Chroma vectorstore
 
 - **UI**: Streamlit
 - **Orchestration**: LangChain
-- **LLM**: LLaMA 3.1 8B Instant via Groq API
+- **LLM**: Groq chat model via `GROQ_MODEL` override, defaulting to `openai/gpt-oss-20b`
 - **Embeddings**: HuggingFace (`sentence-transformers`)
 - **Vector store**: Chroma
 - **Deployment**: Streamlit Community Cloud
@@ -40,6 +40,7 @@ Create a `.env` file in the project root:
 
 ```
 GROQ_API_KEY=your_key_here
+GROQ_MODEL=openai/gpt-oss-20b
 ```
 
 ```bash

@@ -1,7 +1,8 @@
 from rag_pipeline import create_vectorstore
 import streamlit as st
-from langchain_groq import ChatGroq
 from dotenv import load_dotenv
+
+from llm_utils import get_chat_model
 
 load_dotenv()
 
@@ -342,7 +343,7 @@ Context:
 
 Question:
 {question}"""
-                        llm = ChatGroq(model="llama-3.1-8b-instant")
+                        llm = get_chat_model()
                         response = llm.invoke(prompt)
                         answer = response.content
                         sources = [doc.page_content for doc in docs]

@@ -3,10 +3,10 @@ from code_loader import load_codebase
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 
 from github_loader import clone_repo
+from llm_utils import get_chat_model
 
 load_dotenv()
 
@@ -36,9 +36,7 @@ vectorstore = Chroma.from_documents(
 
 retriever = vectorstore.as_retriever()
 
-llm = ChatGroq(
-    model="llama-3.1-8b-instant"
-)
+llm = get_chat_model()
 question = "How does the chatbot store candidate data?"
 
 docs = retriever.invoke(question)
